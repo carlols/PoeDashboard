@@ -1,0 +1,107 @@
+﻿
+<script>
+
+    $(document).ready(function () {
+        loadCurrencyInfo();
+
+        setInterval(function () {
+            loadCurrencyInfo();
+        }, 300000);
+    });
+
+    function loadCurrencyInfo() {
+        const requestUrl = "https://cors-anywhere.herokuapp.com/https://poe.ninja/api/data/currencyoverview?league=Metamorph&type=Currency";
+
+        $.getJSON(requestUrl, function (data) {
+            $.each(data.lines,
+                function (index, currency) {
+                    if (currency.currencyTypeName === "Exalted Orb") {
+                        $("#exaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                    }
+                    if (currency.currencyTypeName === "Divine Orb") {
+                        $("#divineOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                    }
+
+                    if (currency.currencyTypeName === "Crusader's Exalted Orb") {
+                        $("#crusaderExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                    }
+                    if (currency.currencyTypeName === "Redeemer's Exalted Orb") {
+                        $("#redeemerExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                    }
+                    if (currency.currencyTypeName === "Hunter's Exalted Orb") {
+                        $("#hunterExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                    }
+                    if (currency.currencyTypeName === "Warlord's Exalted Orb") {
+                        $("#warlordExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                    }
+                });
+
+        }).done(function () {
+            //MEMES in future perhaps
+        }).fail(function (data) {
+            console.log("oh shit error");
+        });
+
+        let date = new Date($.now());
+        let lastUpdatedFormatted = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        $("#lastUpdatedInfo").text(lastUpdatedFormatted);
+        console.log(`Info updated: ${lastUpdatedFormatted}`);
+    }
+
+</script>
+
+@{
+    ViewData["Title"] = "PoeDashboard";
+}
+
+<h1>PoeDashboard</h1>
+<small>Last updated: <span id="lastUpdatedInfo"></span></small>
+
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <ul class="list-group list-group-horizontal currency-info">
+            <li class="list-group-item" id="exaltedOrb" style="min-width: 199px;">
+                <h6>Exalted Orb</h6>
+                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/2/26/Exalted_Orb_inventory_icon.png?version=a11a90f5b9a6e9d86abd96ed807da598" alt="Exalted Orb" />
+                <span id="exaltedOrbChaosValue"></span>
+            </li>
+            <li class="list-group-item" id="divineOrb" style="min-width: 199px;">
+                <h6>Divine Orb</h6>
+                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/5/58/Divine_Orb_inventory_icon.png?version=b79fc2d633b3b7c891250875343f7f08" alt="Divine Orb" />
+                <span id="divineOrbChaosValue"></span>
+            </li>
+
+            <li class="list-group-item" id="crusaderExaltedOrb" style="min-width: 199px;">
+                <h6>Crusader's Exalted Orb</h6>
+                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/9/95/Crusader%27s_Exalted_Orb_inventory_icon.png?version=3bfac3bd2d9e12da5051638a093f8fd4" alt="Exalted Orb" />
+                <span id="crusaderExaltedOrbChaosValue"></span>
+            </li>
+            <li class="list-group-item" id="redeemderExaltedOrb" style="min-width: 199px;">
+                <h6>Redeemer's Exalted Orb</h6>
+                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/6/6f/Redeemer%27s_Exalted_Orb_inventory_icon.png?version=32000a68861850fb5d51abbc05118fc7" alt="Exalted Orb" />
+                <span id="redeemerExaltedOrbChaosValue"></span>
+            </li>
+            <li class="list-group-item" id="hunterExaltedOrb" style="min-width: 199px;">
+                <h6>Hunter's Exalted Orb</h6>
+                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/e/e2/Hunter%27s_Exalted_Orb_inventory_icon.png?version=5a8b6c7adb72202bd6a95d9a3c67eb25" alt="Exalted Orb" />
+                <span id="hunterExaltedOrbChaosValue"></span>
+            </li>
+            <li class="list-group-item" id="warlordExaltedOrb" style="min-width: 199px;">
+                <h6>Warlord's Exalted Orb</h6>
+                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/d/de/Warlord%27s_Exalted_Orb_inventory_icon.png?version=15955a49fd9004101c9a5ea0c9728dc5" alt="Exalted Orb" />
+                <span id="warlordExaltedOrbChaosValue"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="container px-0 mt-3">
+    <div class="row">
+        <div class="col-4">
+            <a class="btn btn-sm btn-secondary" href="https://www.pathofexile.com/trade/search/Metamorph" target="_blank">Trade items</a>
+            <a class="btn btn-sm btn-secondary" href="https://www.pathofexile.com/trade/exchange/Metamorph" target="_blank">Trade items (bulk)</a>
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+    </div>
+</div>

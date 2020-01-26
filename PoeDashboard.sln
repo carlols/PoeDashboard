@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeDashboard.Web", "PoeDashboard.Web.csproj", "{FB76EBC4-C8E1-4A8E-97A3-65C9D6CDB833}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB76EBC4-C8E1-4A8E-97A3-65C9D6CDB833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB76EBC4-C8E1-4A8E-97A3-65C9D6CDB833}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB76EBC4-C8E1-4A8E-97A3-65C9D6CDB833}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB76EBC4-C8E1-4A8E-97A3-65C9D6CDB833}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B52164E4-082B-4AAA-8D99-7D8604710A4E}
+	EndGlobalSection
+EndGlobal

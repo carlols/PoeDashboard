@@ -1,0 +1,38 @@
+﻿$background-color: #060E13;
+
+body {
+    background-color: $background-color;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    color: orange !important;
+}
+
+.hidden {
+    display: none;
+}
+
+.vertical-center {
+    min-height: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.toast {
+    color: black;
+
+    .toast-body {
+    }
+}
+
+.currency-info {
+    li {
+        background-color: $background-color !important;
+    }
+    .list-group-item{
+        border: none;
+    }
+}
