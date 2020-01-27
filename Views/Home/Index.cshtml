@@ -6,7 +6,7 @@
 
         setInterval(function () {
             loadCurrencyInfo();
-        }, 300000);
+        }, 5000); // 5 minute timer = 300000
     });
 
     function loadCurrencyInfo() {
@@ -21,7 +21,6 @@
                     if (currency.currencyTypeName === "Divine Orb") {
                         $("#divineOrbChaosValue").text(`${currency.chaosEquivalent}c`);
                     }
-
                     if (currency.currencyTypeName === "Crusader's Exalted Orb") {
                         $("#crusaderExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
                     }
@@ -37,7 +36,21 @@
                 });
 
         }).done(function () {
-            //MEMES in future perhaps
+            var exaltValue = parseInt($("#exaltedOrbChaosValue").text().split('.')[0]);
+            console.log(`exalt value: ${exaltValue}`);
+
+            $('[data-toggle="popover"]').popover({
+                html: true,
+                trigger: 'click',
+                content: function() {
+                    return $.ajax({
+                        url: `/Home/LoadCurrencyPopover?id=exaltedOrb&valueInExalt=${exaltValue}&currencyName=Exalted%20Orb`,
+                        dataType: 'html',
+                        async: false}).responseText;
+                }
+            });
+
+
         }).fail(function (data) {
             console.log("oh shit error");
         });
@@ -45,7 +58,6 @@
         let date = new Date($.now());
         let lastUpdatedFormatted = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
         $("#lastUpdatedInfo").text(lastUpdatedFormatted);
-        console.log(`Info updated: ${lastUpdatedFormatted}`);
     }
 
 </script>
@@ -60,7 +72,7 @@
 <div class="row justify-content-center">
     <div class="col-auto">
         <ul class="list-group list-group-horizontal currency-info">
-            <li class="list-group-item" id="exaltedOrb" style="min-width: 199px;">
+            <li class="list-group-item" id="exaltedOrb" style="min-width: 199px;" data-toggle="popover">
                 <h6>Exalted Orb</h6>
                 <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/2/26/Exalted_Orb_inventory_icon.png?version=a11a90f5b9a6e9d86abd96ed807da598" alt="Exalted Orb" />
                 <span id="exaltedOrbChaosValue"></span>

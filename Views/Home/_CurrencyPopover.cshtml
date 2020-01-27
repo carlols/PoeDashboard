@@ -1,0 +1,10 @@
+﻿@model PoeDashboard.Web.Models.CurrencyPopoverModel
+
+<div>
+    <ul>
+        @foreach (var calculatedFraction in Model.FractionalValues)
+        {
+            <li>Value of @calculatedFraction.fraction @Model.CurrencyName: @calculatedFraction.value</li>
+        }
+    </ul>
+</div>
