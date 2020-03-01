@@ -6,7 +6,7 @@
 
         setInterval(function () {
             loadCurrencyInfo();
-        }, 5000); // 5 minute timer = 300000
+        }, 60000); // 5 minute timer = 300000
     });
 
     function loadCurrencyInfo() {
@@ -42,11 +42,12 @@
             $('[data-toggle="popover"]').popover({
                 html: true,
                 trigger: 'click',
-                content: function() {
+                content: function () {
                     return $.ajax({
                         url: `/Home/LoadCurrencyPopover?id=exaltedOrb&valueInExalt=${exaltValue}&currencyName=Exalted%20Orb`,
                         dataType: 'html',
-                        async: false}).responseText;
+                        async: false
+                    }).responseText;
                 }
             });
 
@@ -66,11 +67,7 @@
     ViewData["Title"] = "PoeDashboard";
 }
 
-<h1>PoeDashboard</h1>
-<small>Last updated: <span id="lastUpdatedInfo"></span></small>
-
 <div class="row justify-content-center">
-    <div class="col-auto">
         <ul class="list-group list-group-horizontal currency-info">
             <li class="list-group-item" id="exaltedOrb" style="min-width: 199px;" data-toggle="popover">
                 <h6>Exalted Orb</h6>
@@ -104,16 +101,13 @@
                 <span id="warlordExaltedOrbChaosValue"></span>
             </li>
         </ul>
-    </div>
 </div>
 
-<div class="container px-0 mt-3">
-    <div class="row">
-        <div class="col-4">
-            <a class="btn btn-sm btn-secondary" href="https://www.pathofexile.com/trade/search/Metamorph" target="_blank">Trade items</a>
-            <a class="btn btn-sm btn-secondary" href="https://www.pathofexile.com/trade/exchange/Metamorph" target="_blank">Trade items (bulk)</a>
-        </div>
-        <div class="col-4"></div>
-        <div class="col-4"></div>
+<div class="row">
+    <div class="col-4">
+        <a class="btn btn-sm btn-secondary" href="https://www.pathofexile.com/trade/search/Metamorph" target="_blank">Trade items</a>
+        <a class="btn btn-sm btn-secondary" href="https://www.pathofexile.com/trade/exchange/Metamorph" target="_blank">Trade items (bulk)</a>
     </div>
+    <div class="col-4"></div>
+    <div class="col-4"></div>
 </div>
