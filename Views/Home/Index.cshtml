@@ -14,6 +14,16 @@
             function() {
                 $(this).find(".modal-content").draggable();
             });
+
+        $("#poeWikiSearchBtn").click(function() {
+            searchPoeWiki();
+        });
+
+        $("#poeWikiSearchInput").keyup(function (e) {
+            if (e.which === 13) {
+                searchPoeWiki();
+            }
+        });
     });
 
     function loadCurrencyInfo() {
@@ -69,6 +79,12 @@
         $("#lastUpdatedInfo").text(lastUpdatedFormatted);
     }
 
+    function searchPoeWiki() {
+        var searchString = $("#poeWikiSearchInput").val().replace(/ /g, "+");
+
+        var url = `https://pathofexile.gamepedia.com/index.php?search=${searchString}`;
+        window.open(url);
+    }
 </script>
 
 @{
@@ -144,6 +160,20 @@
         </div>
     </div>
 </div>
+
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2>Search PoE Wiki</h2>
+        <div class="input-group mb-3">
+            <input type="text" id="poeWikiSearchInput" class="form-control" placeholder="Enter your search term...">
+            <div class="input-group-append">
+                <button id="poeWikiSearchBtn" class="btn btn-primary" type="button">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="voriciCalcModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-xl" role="document">
