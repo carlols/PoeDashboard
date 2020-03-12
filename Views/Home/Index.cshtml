@@ -1,48 +1,56 @@
-﻿
+﻿@using PoeDashboard.Web.Code
+
 <script>
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         loadCurrencyInfo();
 
-        setInterval(function () {
-            loadCurrencyInfo();
-        }, 60000); // 5 minute timer = 300000
+        setInterval(function() {
+                loadCurrencyInfo();
+            },
+            60000); // 5 minute timer = 300000
+
+        $("#voriciCalcModal").on("show.bs.modal",
+            function() {
+                $(this).find(".modal-content").draggable();
+            });
     });
 
     function loadCurrencyInfo() {
-        const requestUrl = "https://cors-anywhere.herokuapp.com/https://poe.ninja/api/data/currencyoverview?league=Metamorph&type=Currency";
+        const requestUrl = `https://cors-anywhere.herokuapp.com/https://poe.ninja/api/data/currencyoverview?league=${"@Text.CurrentLeague"}&type=Currency`;
 
-        $.getJSON(requestUrl, function (data) {
-            $.each(data.lines,
-                function (index, currency) {
-                    if (currency.currencyTypeName === "Exalted Orb") {
-                        $("#exaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                    }
-                    if (currency.currencyTypeName === "Divine Orb") {
-                        $("#divineOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                    }
-                    if (currency.currencyTypeName === "Crusader's Exalted Orb") {
-                        $("#crusaderExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                    }
-                    if (currency.currencyTypeName === "Redeemer's Exalted Orb") {
-                        $("#redeemerExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                    }
-                    if (currency.currencyTypeName === "Hunter's Exalted Orb") {
-                        $("#hunterExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                    }
-                    if (currency.currencyTypeName === "Warlord's Exalted Orb") {
-                        $("#warlordExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                    }
-                });
+        $.getJSON(requestUrl,
+            function(data) {
+                $.each(data.lines,
+                    function(index, currency) {
+                        if (currency.currencyTypeName === "Exalted Orb") {
+                            $("#exaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                        }
+                        if (currency.currencyTypeName === "Divine Orb") {
+                            $("#divineOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                        }
+                        if (currency.currencyTypeName === "Crusader's Exalted Orb") {
+                            $("#crusaderExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                        }
+                        if (currency.currencyTypeName === "Redeemer's Exalted Orb") {
+                            $("#redeemerExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                        }
+                        if (currency.currencyTypeName === "Hunter's Exalted Orb") {
+                            $("#hunterExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                        }
+                        if (currency.currencyTypeName === "Warlord's Exalted Orb") {
+                            $("#warlordExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                        }
+                    });
 
-        }).done(function () {
+            }).done(function() {
             var exaltValue = parseInt($("#exaltedOrbChaosValue").text().split('.')[0]);
             console.log(`exalt value: ${exaltValue}`);
 
             $('[data-toggle="popover"]').popover({
                 html: true,
                 trigger: 'click',
-                content: function () {
+                content: function() {
                     return $.ajax({
                         url: `/Home/LoadCurrencyPopover?id=exaltedOrb&valueInExalt=${exaltValue}&currencyName=Exalted%20Orb`,
                         dataType: 'html',
@@ -52,7 +60,7 @@
             });
 
 
-        }).fail(function (data) {
+        }).fail(function(data) {
             console.log("oh shit error");
         });
 
@@ -67,47 +75,81 @@
     ViewData["Title"] = "PoeDashboard";
 }
 
-<div class="row justify-content-center">
-        <ul class="list-group list-group-horizontal currency-info">
-            <li class="list-group-item" id="exaltedOrb" style="min-width: 199px;" data-toggle="popover">
-                <h6>Exalted Orb</h6>
-                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/2/26/Exalted_Orb_inventory_icon.png?version=a11a90f5b9a6e9d86abd96ed807da598" alt="Exalted Orb" />
-                <span id="exaltedOrbChaosValue"></span>
-            </li>
-            <li class="list-group-item" id="divineOrb" style="min-width: 199px;">
-                <h6>Divine Orb</h6>
-                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/5/58/Divine_Orb_inventory_icon.png?version=b79fc2d633b3b7c891250875343f7f08" alt="Divine Orb" />
-                <span id="divineOrbChaosValue"></span>
-            </li>
-
-            <li class="list-group-item" id="crusaderExaltedOrb" style="min-width: 199px;">
-                <h6>Crusader's Exalted Orb</h6>
-                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/9/95/Crusader%27s_Exalted_Orb_inventory_icon.png?version=3bfac3bd2d9e12da5051638a093f8fd4" alt="Exalted Orb" />
-                <span id="crusaderExaltedOrbChaosValue"></span>
-            </li>
-            <li class="list-group-item" id="redeemderExaltedOrb" style="min-width: 199px;">
-                <h6>Redeemer's Exalted Orb</h6>
-                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/6/6f/Redeemer%27s_Exalted_Orb_inventory_icon.png?version=32000a68861850fb5d51abbc05118fc7" alt="Exalted Orb" />
-                <span id="redeemerExaltedOrbChaosValue"></span>
-            </li>
-            <li class="list-group-item" id="hunterExaltedOrb" style="min-width: 199px;">
-                <h6>Hunter's Exalted Orb</h6>
-                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/e/e2/Hunter%27s_Exalted_Orb_inventory_icon.png?version=5a8b6c7adb72202bd6a95d9a3c67eb25" alt="Exalted Orb" />
-                <span id="hunterExaltedOrbChaosValue"></span>
-            </li>
-            <li class="list-group-item" id="warlordExaltedOrb" style="min-width: 199px;">
-                <h6>Warlord's Exalted Orb</h6>
-                <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/d/de/Warlord%27s_Exalted_Orb_inventory_icon.png?version=15955a49fd9004101c9a5ea0c9728dc5" alt="Exalted Orb" />
-                <span id="warlordExaltedOrbChaosValue"></span>
-            </li>
-        </ul>
+<div class="row ">
+    <ul class="list-group list-group-horizontal currency-info">
+        <li class="list-group-item" id="exaltedOrb" style="min-width: 199px;" data-toggle="popover">
+            <h6 class="text-nowrap">Exalted Orb</h6>
+            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/2/26/Exalted_Orb_inventory_icon.png?version=a11a90f5b9a6e9d86abd96ed807da598" alt="Exalted Orb" />
+            <span id="exaltedOrbChaosValue"></span>
+        </li>
+        <li class="list-group-item" id="divineOrb" style="min-width: 199px;">
+            <h6 class="text-nowrap">Divine Orb</h6>
+            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/5/58/Divine_Orb_inventory_icon.png?version=b79fc2d633b3b7c891250875343f7f08" alt="Divine Orb" />
+            <span id="divineOrbChaosValue"></span>
+        </li>
+        <li class="list-group-item" id="crusaderExaltedOrb" style="min-width: 199px;">
+            <h6 class="text-nowrap">Crusader's Exalted Orb</h6>
+            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/9/95/Crusader%27s_Exalted_Orb_inventory_icon.png?version=3bfac3bd2d9e12da5051638a093f8fd4" alt="Exalted Orb" />
+            <span id="crusaderExaltedOrbChaosValue"></span>
+        </li>
+        <li class="list-group-item" id="redeemderExaltedOrb" style="min-width: 199px;">
+            <h6 class="text-nowrap">Redeemer's Exalted Orb</h6>
+            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/6/6f/Redeemer%27s_Exalted_Orb_inventory_icon.png?version=32000a68861850fb5d51abbc05118fc7" alt="Exalted Orb" />
+            <span id="redeemerExaltedOrbChaosValue"></span>
+        </li>
+        <li class="list-group-item" id="hunterExaltedOrb" style="min-width: 199px;">
+            <h6 class="text-nowrap">Hunter's Exalted Orb</h6>
+            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/e/e2/Hunter%27s_Exalted_Orb_inventory_icon.png?version=5a8b6c7adb72202bd6a95d9a3c67eb25" alt="Exalted Orb" />
+            <span id="hunterExaltedOrbChaosValue"></span>
+        </li>
+        <li class="list-group-item" id="warlordExaltedOrb" style="min-width: 199px;">
+            <h6 class="text-nowrap">Warlord's Exalted Orb</h6>
+            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/d/de/Warlord%27s_Exalted_Orb_inventory_icon.png?version=15955a49fd9004101c9a5ea0c9728dc5" alt="Exalted Orb" />
+            <span id="warlordExaltedOrbChaosValue"></span>
+        </li>
+    </ul>
 </div>
 
-<div class="row">
+<div class="row mt-5">
     <div class="col-4">
-        <a class="btn btn-sm btn-secondary" href="https://www.pathofexile.com/trade/search/Metamorph" target="_blank">Trade items</a>
-        <a class="btn btn-sm btn-secondary" href="https://www.pathofexile.com/trade/exchange/Metamorph" target="_blank">Trade items (bulk)</a>
+        <h2>Trading utility</h2>
+        <div class="card">
+            <ul class="list-group list-group-flush">
+                <a href="https://www.pathofexile.com/trade/search/@Text.CurrentLeague" target="_blank"><li class="list-group-item list-group-item-dark"><i class="gg-shopping-bag mr-1"></i> Official Trade</li></a>
+                <a href="https://www.pathofexile.com/trade/exchange/@Text.CurrentLeague" target="_blank"><li class="list-group-item list-group-item-dark"><i class="gg-shopping-bag mr-1"></i> Official Trade (bulk)</li></a>
+                <a href="https://poeapp.com/" target="_blank"><li class="list-group-item list-group-item-dark"><i class="gg-shopping-bag mr-1"></i> Poeapp</li></a>
+            </ul>
+        </div>
     </div>
-    <div class="col-4"></div>
-    <div class="col-4"></div>
+    <div class="col-4">
+        <h2>Crafting utility</h2>
+        <div class="card">
+            <ul class="list-group list-group-flush">
+                <a href="https://poedb.tw/us/mod.php" target="_blank"><li class="list-group-item list-group-item-dark"><i class="gg-bulb mr-1"></i> Poedb (mods)</li></a>
+
+            </ul>
+            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#voriciCalcModal">
+                <i class="gg-calculator mr-1"></i> Vorici Calculator
+            </button>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <h2>Misc utility</h2>
+        <div class="card">
+            <ul class="list-group list-group-flush">
+                <a href="https://www.poelab.com/" target="_blank"><li class="list-group-item list-group-item-dark"><i class="gg-readme mr-3"></i> Poelab</li></a>
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="voriciCalcModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div id="voriciCalcModalContent" class="modal-content">
+            <div class="modal-header" style="height: 10px; width: 100%;"></div>
+            <iframe scrolling="no" src="https://siveran.github.io/calc.html" style="width: 100%; height: 720px;"></iframe>
+        </div>
+    </div>
 </div>

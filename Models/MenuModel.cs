@@ -2,10 +2,9 @@
 {
     public class MenuModel
     {
-        public MenuModel(string clientIp)
+        public MenuModel()
         {
-            ClientIp = clientIp;
+            
         }
-        public string ClientIp { get; set; }
     }
 }

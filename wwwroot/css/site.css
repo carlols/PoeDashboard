@@ -1,10 +1,7 @@
 ﻿body {
-  background-color: #060E13;
-  color: white;
+  background-color: #2d2d2d;
+  color: #cfd2d6;
   font-family: 'Roboto', sans-serif; }
-
-a {
-  color: orange !important; }
 
 .hidden {
   display: none; }
@@ -19,7 +16,10 @@ a {
   color: black; }
 
 .currency-info li {
-  background-color: #060E13 !important; }
+  background-color: #2d2d2d !important; }
 
 .currency-info .list-group-item {
   border: none; }
+
+i[class*="gg-"] {
+  float: left !important; }
