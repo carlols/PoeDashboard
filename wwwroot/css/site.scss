@@ -36,5 +36,9 @@ body {
 }
 
 i[class*="gg-"] {
-    float: left !important;
+    display: inline-flex;
+}
+
+.close {
+    color: $base-font-color !important;
 }

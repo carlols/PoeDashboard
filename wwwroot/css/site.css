@@ -22,4 +22,7 @@
   border: none; }
 
 i[class*="gg-"] {
-  float: left !important; }
+  display: inline-flex; }
+
+.close {
+  color: #cfd2d6 !important; }

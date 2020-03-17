@@ -1,14 +1,17 @@
 ﻿@using PoeDashboard.Web.Code
 
 <script>
+    const localStorageKey = "poeDashboardConfig";
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadCurrencyInfo();
+        $(".draggable").draggable();
+        
 
         setInterval(function() {
                 loadCurrencyInfo();
             },
-            60000); // 5 minute timer = 300000
+            300000); // 5 minute timer = 300000
 
         $("#voriciCalcModal").on("show.bs.modal",
             function() {
@@ -24,39 +27,84 @@
                 searchPoeWiki();
             }
         });
+
+        $("#addCurrenciesBtn").click(function () {
+            let selectedCurrencies = $("#addCurrenciesDropdown").dropdown("get value");
+            console.log(selectedCurrencies);
+            if (selectedCurrencies !== "") {
+                let configStringFromLocalStorage = localStorage.getItem(localStorageKey);
+
+                localStorage.setItem(localStorageKey, configStringFromLocalStorage + "," + selectedCurrencies);
+                $("#addCurrenciesDropdown").dropdown("clear");
+                loadCurrencyInfo();
+            }
+        });
+
+        $(".ui.dropdown").dropdown();
     });
 
     function loadCurrencyInfo() {
+        const localStorageConfig = localStorage.getItem(localStorageKey);
+
+        //Set default config if none is specified
+        if (!localStorageConfig) {
+            localStorage.setItem(localStorageKey, "Exalted Orb,Divine Orb,Crusader's Exalted Orb,Hunter's Exalted Orb,Warlord's Exalted Orb");
+            loadCurrencyInfo();
+            return;
+        }
+
+        var configArray = localStorage.getItem(localStorageKey).split(",");
+        console.log("Loaded config array:");
+        console.log(configArray);
+
         const requestUrl = `https://cors-anywhere.herokuapp.com/https://poe.ninja/api/data/currencyoverview?league=${"@Text.CurrentLeague"}&type=Currency`;
+
+        $(".currency-info").empty();
+        $(".currency-to-add-list").empty();
 
         $.getJSON(requestUrl,
             function(data) {
+
+                $.each(configArray, function (index, currencyName) {
+                    currencyName = currencyName.trim();
+
+                    var currencyId = currencyName.toCamelCase();
+                    var iconUrl = data.currencyDetails.filter(details => details.name === currencyName)[0].icon;
+                    var orbChaosValue = data.lines.filter(line => line.currencyTypeName === currencyName)[0].chaosEquivalent + "c";
+
+                    var currencyCloneToBeInserted = $("#currencyCloneId").clone().removeClass("hidden").get(0).outerHTML
+                        .replaceAll("CurrencyName", currencyName)
+                        .replaceAll("currencyCloneId", currencyId);
+
+                    $(".currency-info").append($.parseHTML(currencyCloneToBeInserted));
+
+                    $("#" + currencyId).find(".orb-icon").attr("src", iconUrl);
+                    $("#" + currencyId).find(".orb-chaos-value").text(orbChaosValue);
+                });
+
+                var filteredCurrencyDetails = new Array();
+
                 $.each(data.lines,
-                    function(index, currency) {
-                        if (currency.currencyTypeName === "Exalted Orb") {
-                            $("#exaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                        }
-                        if (currency.currencyTypeName === "Divine Orb") {
-                            $("#divineOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                        }
-                        if (currency.currencyTypeName === "Crusader's Exalted Orb") {
-                            $("#crusaderExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                        }
-                        if (currency.currencyTypeName === "Redeemer's Exalted Orb") {
-                            $("#redeemerExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                        }
-                        if (currency.currencyTypeName === "Hunter's Exalted Orb") {
-                            $("#hunterExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
-                        }
-                        if (currency.currencyTypeName === "Warlord's Exalted Orb") {
-                            $("#warlordExaltedOrbChaosValue").text(`${currency.chaosEquivalent}c`);
+                    function (index, line) {
+                        if (!configArray.includes(line.currencyTypeName)) {
+                            filteredCurrencyDetails.push(line.currencyTypeName);
                         }
                     });
 
-            }).done(function() {
-            var exaltValue = parseInt($("#exaltedOrbChaosValue").text().split('.')[0]);
-            console.log(`exalt value: ${exaltValue}`);
+                $.each(filteredCurrencyDetails,
+                    function (index, currencyName) {
+                        var iconUrl = data.currencyDetails.filter(details => details.name === currencyName)[0].icon;
 
+                        var dropdownMenuItemToBeInserted = $(".dropdown-menu-item-clone").clone().removeClass("hidden dropdown-menu-item-clone").get(0).outerHTML
+                            .replaceAll("CurrencyName", currencyName);
+
+                        $(".currency-to-add-list").append($.parseHTML(dropdownMenuItemToBeInserted));
+
+                        $(".currency-to-add-list").find(`[data-value="${currencyName}"]`).find(".orb-icon").attr("src", iconUrl);
+                    });
+
+            }).done(function () {
+            var exaltValue = parseInt($("#exaltedOrb").find(".orb-chaos-value").text().split('.')[0]);
             $('[data-toggle="popover"]').popover({
                 html: true,
                 trigger: 'click',
@@ -68,10 +116,25 @@
                     }).responseText;
                 }
             });
+            $(".currency-panel-close-btn").click(function (e) {
+                var parent = this.closest(".currency-info-panel");
+                var currencyName = $(parent).find(".currency-info-title").text();
 
+                var updatedConfig = configArray.filter(v => v != currencyName);
+                updatedConfig = $.map(updatedConfig, $.trim);
 
+                console.log("Updated config:");
+                console.log(updatedConfig);
+                localStorage.setItem(localStorageKey, updatedConfig);
+
+                loadCurrencyInfo();
+            });
+                $(".currency-info").css("min-height", function () {
+                    var visibleCurrencyInfoPanels = $(".currency-info-panel:visible").length;
+                    return ((Math.ceil(visibleCurrencyInfoPanels / 4)) * 80);
+                });
         }).fail(function(data) {
-            console.log("oh shit error");
+            console.error(`Currency update failed: ${data}`);
         });
 
         let date = new Date($.now());
@@ -91,39 +154,38 @@
     ViewData["Title"] = "PoeDashboard";
 }
 
-<div class="row ">
-    <ul class="list-group list-group-horizontal currency-info">
-        <li class="list-group-item" id="exaltedOrb" style="min-width: 199px;" data-toggle="popover">
-            <h6 class="text-nowrap">Exalted Orb</h6>
-            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/2/26/Exalted_Orb_inventory_icon.png?version=a11a90f5b9a6e9d86abd96ed807da598" alt="Exalted Orb" />
-            <span id="exaltedOrbChaosValue"></span>
-        </li>
-        <li class="list-group-item" id="divineOrb" style="min-width: 199px;">
-            <h6 class="text-nowrap">Divine Orb</h6>
-            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/5/58/Divine_Orb_inventory_icon.png?version=b79fc2d633b3b7c891250875343f7f08" alt="Divine Orb" />
-            <span id="divineOrbChaosValue"></span>
-        </li>
-        <li class="list-group-item" id="crusaderExaltedOrb" style="min-width: 199px;">
-            <h6 class="text-nowrap">Crusader's Exalted Orb</h6>
-            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/9/95/Crusader%27s_Exalted_Orb_inventory_icon.png?version=3bfac3bd2d9e12da5051638a093f8fd4" alt="Exalted Orb" />
-            <span id="crusaderExaltedOrbChaosValue"></span>
-        </li>
-        <li class="list-group-item" id="redeemderExaltedOrb" style="min-width: 199px;">
-            <h6 class="text-nowrap">Redeemer's Exalted Orb</h6>
-            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/6/6f/Redeemer%27s_Exalted_Orb_inventory_icon.png?version=32000a68861850fb5d51abbc05118fc7" alt="Exalted Orb" />
-            <span id="redeemerExaltedOrbChaosValue"></span>
-        </li>
-        <li class="list-group-item" id="hunterExaltedOrb" style="min-width: 199px;">
-            <h6 class="text-nowrap">Hunter's Exalted Orb</h6>
-            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/e/e2/Hunter%27s_Exalted_Orb_inventory_icon.png?version=5a8b6c7adb72202bd6a95d9a3c67eb25" alt="Exalted Orb" />
-            <span id="hunterExaltedOrbChaosValue"></span>
-        </li>
-        <li class="list-group-item" id="warlordExaltedOrb" style="min-width: 199px;">
-            <h6 class="text-nowrap">Warlord's Exalted Orb</h6>
-            <img class="mr-2" style="height: 78px; width: 78px;" src="https://gamepedia.cursecdn.com/pathofexile_gamepedia/d/de/Warlord%27s_Exalted_Orb_inventory_icon.png?version=15955a49fd9004101c9a5ea0c9728dc5" alt="Exalted Orb" />
-            <span id="warlordExaltedOrbChaosValue"></span>
-        </li>
-    </ul>
+<div class="currency-info-panel col-3 hidden justify-content-center mt-2" id="currencyCloneId">
+    <h6 class="text-nowrap align-middle">
+        <span class="currency-info-title">CurrencyName</span>
+        <i class="gg-close-r currency-panel-close-btn ml-5 float-right" style="cursor: pointer"></i>
+    </h6>
+    <img class="orb-icon mr-2" style="height: 50px; width: 50px;" alt="CurrencyName" data-toggle="popover" />
+    <span class="orb-chaos-value"></span>
+</div>
+
+<div class="hidden item dropdown-menu-item-clone" data-value="CurrencyName"><img class="orb-icon" />CurrencyName</div>
+
+
+
+
+<div class="row currency-info">
+    @*List gets populated dynamically based on user config in localstorage*@
+</div>
+
+<div class="row mt-4">
+    <div class="col-11">
+        <div id="addCurrenciesDropdown" class="ui fluid multiple search selection dropdown">
+            <input type="hidden" name="country">
+            <i class="dropdown icon"></i>
+            <div class="default text">Select currencies to track...</div>
+            <div class="menu currency-to-add-list">
+                @*Dropdown list populated dynamically in js*@
+            </div>
+        </div>
+    </div>
+    <div class="col-1 pl-0">
+        <button id="addCurrenciesBtn" class="btn btn-sm btn-primary w-100 h-100">Track</button>
+    </div>
 </div>
 
 <div class="row mt-5">
@@ -161,7 +223,6 @@
     </div>
 </div>
 
-
 <div class="row mt-5">
     <div class="col-12">
         <h2>Search PoE Wiki</h2>
@@ -173,7 +234,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="voriciCalcModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-xl" role="document">
