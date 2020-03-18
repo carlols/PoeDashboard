@@ -59,6 +59,9 @@
 
         const requestUrl = `https://cors-anywhere.herokuapp.com/https://poe.ninja/api/data/currencyoverview?league=${"@Text.CurrentLeague"}&type=Currency`;
 
+        //Use the url below instead of the one above to let the site work with sample data. Useful if the poe.ninja API is down for example.
+        //const requestUrl = "Home/GetPoeNinjaSampleJson";
+
         $(".currency-info").empty();
         $(".currency-to-add-list").empty();
 
@@ -134,7 +137,7 @@
                     return ((Math.ceil(visibleCurrencyInfoPanels / 4)) * 80);
                 });
         }).fail(function(data) {
-            console.error(`Currency update failed: ${data}`);
+            console.error(`Currency update failed: `, data);
         });
 
         let date = new Date($.now());
