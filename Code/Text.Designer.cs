@@ -61,11 +61,20 @@ namespace PoeDashboard.Web.Code {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delirium.
+        ///   Looks up a localized string similar to Harvest.
         /// </summary>
         public static string CurrentLeague {
             get {
                 return ResourceManager.GetString("CurrentLeague", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delirium.
+        /// </summary>
+        public static string Delirium {
+            get {
+                return ResourceManager.GetString("Delirium", resourceCulture);
             }
         }
     }
