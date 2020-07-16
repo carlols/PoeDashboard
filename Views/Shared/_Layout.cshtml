@@ -7,28 +7,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>@ViewData["Title"]</title>
+
+
+    @*External stylesheets*@
     <link rel="stylesheet" href="lib/semantic-ui/semantic.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
     <link rel="stylesheet" href="lib/css.gg/icons.min.css" />
 
+    @*Internal stylesheets*@
+    <link rel="stylesheet" href="~/css/site.min.css" />
+
+
+
+    @*External scripts*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/semantic-ui/semantic.min.js"></script>
     <script src="https://kit.fontawesome.com/a4acac7ba4.js" crossorigin="anonymous"></script>
+
+    @*Internal scripts*@
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/Themes.js" asp-append-version="true"></script>
 
 
     @RenderSection("Scripts", required: false)
 </head>
 
 <body style="height: 100%; overflow-y: hidden;">
+    <script>ApplyTheme()</script>
+
     <partial name="_Menu" model="ViewBag.MenuModel as MenuModel" />
 
     <div class="container" style="height: 100%;">
         @RenderBody()
     </div>
+
+    <partial name="_Footer" />
 </body>
 </html>

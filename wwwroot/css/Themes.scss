@@ -1,0 +1,32 @@
+﻿//Variables
+html {
+    --base-bg-color: #2d2d2d;
+    --base-font-color: #cfd2d6;
+}
+
+
+
+//Applying styling
+body {
+    background-color: var(--base-bg-color);
+    color: var(--base-font-color);
+
+    nav.navbar {
+        a.dropdown-toggle {
+            color: var(--base-font-color);
+        }
+    }
+}
+
+
+
+//Themes
+html[data-theme="dark"] {
+    --base-bg-color: #2d2d2d;
+    --base-font-color: #cfd2d6;
+}
+
+html[data-theme="light"] {
+    --base-bg-color: #fff;
+    --base-font-color: #646369;
+}
